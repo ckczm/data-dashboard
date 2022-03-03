@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: data-dashboard-postgres
+    image: postgres:14.2
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+    ports:
+      - "8504:5432"
+  airflow:
+    container_name: data-dashboard-airflow
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - minio
+    ports:
+      - "8501:8080"
+  minio:
+    container_name: data-dashboard-minio
+    image: minio/minio:latest
+    environment:
+      - "MINIO_ROOT_USER=minio"
+      - "MINIO_ROOT_PASSWORD=minio123"
+    ports:
+      - "8502:9000"
+      - "8503:9001"
+    command: server --console-address ":9001" /home/shared
