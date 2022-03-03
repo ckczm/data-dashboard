@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.operators.python_operator import PythonOperator
 
+from tasks.collect_job_pages import collect_job_pages_links, print_pages
 
 with DAG(
     'scraping_nf',
@@ -20,17 +21,15 @@ with DAG(
     catchup=False
 ) as dag:
 
-    # t1, t2 and t3 are examples of tasks created by instantiating operators
-    t1 = BashOperator(
-        task_id='print_date',
-        bash_command='date',
+    t1 = PythonOperator(
+        task_id='collect_job_pages',
+        python_callable=collect_job_pages_links,
     )
 
-    t2 = BashOperator(
-        task_id='sleep',
-        depends_on_past=False,
-        bash_command='sleep 5',
-        retries=3,
+    t2 = PythonOperator(
+        task_id='print_pages',
+        provide_context=True,
+        python_callable=print_pages,
     )
 
     t1 >> t2
