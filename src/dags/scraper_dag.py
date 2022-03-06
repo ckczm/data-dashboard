@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-from tasks.collect_job_pages import collect_job_pages_links, print_pages
+from tasks.collect_job_pages import collect_pagination_links
+from tasks.collect_job_links import collect_job_links
 
 with DAG(
     'scraping_nf',
@@ -22,14 +23,12 @@ with DAG(
 ) as dag:
 
     t1 = PythonOperator(
-        task_id='collect_job_pages',
-        python_callable=collect_job_pages_links,
+        task_id='collect_pagination_links',
+        python_callable=collect_pagination_links,
     )
 
     t2 = PythonOperator(
-        task_id='print_pages',
+        task_id='collect_job_links',
         provide_context=True,
-        python_callable=print_pages,
+        python_callable=collect_job_links,
     )
-
-    t1 >> t2
