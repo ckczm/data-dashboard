@@ -9,14 +9,19 @@ services:
       - "POSTGRES_PASSWORD=postgres"
     ports:
       - "8504:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   airflow:
     container_name: data-dashboard-airflow
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres
-      - minio
+      postgres:
+        condition: service_healthy
     ports:
       - "8501:8080"
   minio:
