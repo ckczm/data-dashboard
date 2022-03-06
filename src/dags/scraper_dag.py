@@ -4,6 +4,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from tasks.collect_job_pages import collect_pagination_links
 from tasks.collect_job_links import collect_job_links
+from tasks.extract_job_details import extract_job_details
 
 with DAG(
     'scraping_nf',
@@ -32,3 +33,10 @@ with DAG(
         provide_context=True,
         python_callable=collect_job_links,
     )
+
+    t3 = PythonOperator(
+        task_id='extract_job_details',
+        python_callable=extract_job_details
+    )
+
+    t1 >> t2 >> t3
