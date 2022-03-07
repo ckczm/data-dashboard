@@ -5,7 +5,7 @@ from minio import Minio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from src.db.models.job_details import JobDetails
+from db.models.job_details import JobDetails
 
 
 def filter_load_data():
@@ -45,21 +45,22 @@ def filter_load_data():
             split_salary_values = data["salary"].split("-")
             data["min_salary"] = int(split_salary_values[0].replace(" ", ""))
             data["max_salary"] = int(split_salary_values[1][0:-3].replace(" ", "")) # remove PLN
+            
+            # load data to database
+            df = pd.DataFrame([data])
+            for _, row in df.iterrows():
+                doc = JobDetails(
+                    job_name=row["job_name"],
+                    min_salary=row["min_salary"],
+                    max_salary=row["max_salary"],
+                    seniority=row["seniority"],
+                    requirements=row["requirements"],
+                    nice_to_have=row["nice_to_have"]
+                )
+
+                session.add(doc)
+                session.commit()
         else:
             print(f"Non-standard salary value: {data['salary']}")
 
-        # load data to database
-        df = pd.DataFrame([data])
-        for _, row in df.iterrows():
-            doc = JobDetails(
-                job_name=row["job_name"],
-                min_salary=row["min_salary"],
-                max_salary=row["max_salary"],
-                seniority=row["seniority"],
-                requirements=row["requirements"],
-                nice_to_have=row["nice_to_have"]
-            )
-
-            session.add(doc)
-            session.commit()
     session.close()
