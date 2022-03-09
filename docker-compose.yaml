@@ -24,6 +24,11 @@ services:
         condition: service_healthy
     ports:
       - "8501:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   minio:
     container_name: data-dashboard-minio
     image: minio/minio:latest
@@ -33,4 +38,10 @@ services:
     ports:
       - "8502:9000"
       - "8503:9001"
-    command: server --console-address ":9001" /home/shared
+    entrypoint: sh
+    command: -c '
+      mkdir -p /home/shared/job-details;
+      mkdir -p /home/shared/job-links;
+      /opt/bin/minio server --console-address ":9001" /home/shared;
+      exit 0;
+      '

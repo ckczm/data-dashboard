@@ -37,8 +37,6 @@ def collect_job_links(ti):
         secure=False
     )
 
-    client.make_bucket("job-links")
-
     json_data = json.dumps(all_job_links)
     binary_data = json_data.encode()
     data_to_send = BytesIO(binary_data)

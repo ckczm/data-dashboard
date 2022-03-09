@@ -21,8 +21,6 @@ def extract_job_details():
 
     all_job_links = json.loads(response.data)
 
-    client.make_bucket("job-details")
-
     for i, page in enumerate(all_job_links.keys()):
 
         for index, link in enumerate(all_job_links[page]):
