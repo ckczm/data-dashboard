@@ -39,6 +39,10 @@ def filter_load_data():
 
         data = json.loads(raw_data)
 
+        # check if job hash already exists in database, if so - skip getting data
+        if session.query(JobDetails).filter_by(job_hash=data["job_hash"]).first() is not None:
+            continue
+
         # split salary range into min and max salary value, from max salary
         # remove currency value
         if "-" in data["salary"]:

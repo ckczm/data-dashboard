@@ -51,6 +51,7 @@ def extract_job_details():
             # prepare job details
             data = {
                 "job_name": soup.select_one(".posting-details-description").h1.text.strip(),
+                "job_hash": link.split("-")[-1],
                 "salary": soup.find("common-posting-salaries-list").h4.text.strip().replace(" ", ""),
                 "seniority": soup.find("common-posting-seniority").span.text.strip(),
                 "requirements": mandatory_req,
