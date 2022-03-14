@@ -9,6 +9,7 @@ class JobDetails(Base):
 
     id = Column(Integer, primary_key=True)
     job_name = Column(String(200))
+    job_hash = Column(String(8))
     min_salary = Column(Integer)
     max_salary = Column(Integer)
     seniority = Column(String(150))
@@ -18,6 +19,7 @@ class JobDetails(Base):
     def __init__(
         self,
         job_name: str,
+        job_hash: str,
         min_salary: int,
         max_salary: int,
         seniority: str,
@@ -26,6 +28,7 @@ class JobDetails(Base):
     ):
 
         self.job_name = job_name,
+        self.job_hash = job_hash,
         self.min_salary = min_salary,
         self.max_salary = max_salary,
         self.seniority = seniority,
@@ -33,6 +36,6 @@ class JobDetails(Base):
         self.nice_to_have = nice_to_have
     
     def __repr__(self):
-        return f"JobDetails: {self.id}, {self.job_name}, {self.min_salary}, \
-            {self.max_salary}, {self.seniority}, {self.requirements}, \
-                {self.nice_to_have}"
+        return f"JobDetails: {self.id}, {self.job_name}, {self.job_hash}, \
+            {self.min_salary}, {self.max_salary}, {self.seniority}, \
+                {self.requirements}, {self.nice_to_have}"

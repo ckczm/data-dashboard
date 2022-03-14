@@ -5,6 +5,7 @@ CREATE DATABASE nofluffdata WITH ENCODING = 'UTF-8';
 CREATE TABLE job_details (
     id SERIAL PRIMARY KEY,
     job_name VARCHAR(200),
+    job_hash VARCHAR(8) UNIQUE,
     min_salary INT,
     max_salary INT,
     seniority VARCHAR(150),
